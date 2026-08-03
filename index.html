@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP DEMO Portal</title>
+<style>
+:root {
+  --sap-blue: #0070F2;
+  --sap-blue-dark: #0050B8;
+  --sap-blue-light: #4CB1FF;
+  --sap-blue-pale: #E1F4FF;
+  --bg: #F2F4F7;
+  --white: #FFFFFF;
+  --border: #E1E2E6;
+  --text: #1D2D3E;
+  --text-muted: #556B82;
+  --tag-bg: #E1F4FF;
+  --green: #107E3E;
+  --green-bg: #EAF5EA;
+  --orange: #C14646;
+  --orange-bg: #FCEAEA;
+  --purple: #5C23C9;
+  --purple-bg: #F0ECFF;
+  --amber: #E96B09;
+  --amber-bg: #FFF3E8;
+  --header-h: 56px;
+  --subnav-h: 50px;
+  --radius: 12px;
+  --shadow: 0 1px 6px rgba(0,0,0,.07);
+  --shadow-hover: 0 6px 24px rgba(0,112,242,.14);
+  --transition: .18s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"72","72 Brand",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:200;
+  height:var(--header-h);background:var(--sap-blue);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.header-left{display:flex;align-items:center;gap:14px}
+.logo-wrap{display:flex;align-items:center;height:30px}
+.logo-wrap svg{height:28px;width:auto}
+.hdiv{width:1px;height:20px;background:rgba(255,255,255,.35)}
+.header-title{font-size:17px;font-weight:600;color:#fff;letter-spacing:.2px}
+
+/* Search */
+.search-wrap{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);
+  border-radius:24px;padding:7px 16px;min-width:260px;
+  transition:background var(--transition);
+}
+.search-wrap:focus-within{background:rgba(255,255,255,.22)}
+.search-wrap svg{flex-shrink:0;opacity:.8}
+.search-wrap input{
+  background:transparent;border:none;outline:none;
+  color:#fff;font-size:14px;width:100%;
+}
+.search-wrap input::placeholder{color:rgba(255,255,255,.65)}
+
+/* ── TAB NAV ── */
+.tab-nav{
+  position:sticky;top:var(--header-h);z-index:190;
+  background:var(--white);border-bottom:2px solid var(--border);
+  padding:0 28px;display:flex;gap:2px;overflow-x:auto;
+}
+.tab-nav::-webkit-scrollbar{height:0}
+.tab-btn{
+  padding:15px 18px;background:none;border:none;border-bottom:3px solid transparent;
+  cursor:pointer;font-size:14px;font-weight:500;color:var(--text-muted);
+  white-space:nowrap;margin-bottom:-2px;transition:all var(--transition);
+}
+.tab-btn:hover{color:var(--sap-blue)}
+.tab-btn.active{color:var(--sap-blue);border-bottom-color:var(--sap-blue);font-weight:700}
+
+/* ── SUB FILTER BAR (SAC) ── */
+.subfilter-bar{
+  background:var(--white);padding:10px 28px;border-bottom:1px solid var(--border);
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.subfilter-bar.hidden{display:none}
+.chip{
+  padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--white);cursor:pointer;font-size:13px;font-weight:500;
+  color:var(--text-muted);transition:all var(--transition);
+}
+.chip:hover{border-color:var(--sap-blue);color:var(--sap-blue)}
+.chip.active{background:var(--sap-blue);border-color:var(--sap-blue);color:#fff}
+
+/* ── MAIN ── */
+.main{padding:24px 28px;max-width:1440px;margin:0 auto}
+
+/* stats row */
+.stats-row{
+  display:flex;gap:20px;flex-wrap:wrap;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 22px;margin-bottom:24px;
+}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:80px}
+.stat-val{font-size:26px;font-weight:700;color:var(--sap-blue);line-height:1}
+.stat-lbl{font-size:12px;color:var(--text-muted);margin-top:2px}
+.vdivider{width:1px;background:var(--border);align-self:stretch}
+
+/* section */
+.section{margin-bottom:36px}
+.section-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.sec-icon{
+  width:34px;height:34px;border-radius:8px;background:var(--sap-blue);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-size:17px;flex-shrink:0;
+}
+.sec-titles{display:flex;flex-direction:column;gap:1px}
+.sec-title{font-size:16px;font-weight:700}
+.sec-sub{font-size:12px;color:var(--text-muted)}
+.sec-line{flex:1;height:1px;background:var(--border)}
+.sec-count{
+  font-size:12px;font-weight:600;color:var(--sap-blue);
+  background:var(--sap-blue-pale);border-radius:20px;padding:2px 10px;
+}
+
+/* grid */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:14px;
+}
+
+/* ── DEMO CARD ── */
+.card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;
+  cursor:pointer;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:10px;
+  transition:all var(--transition);position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--sap-blue);transform:scaleX(0);transform-origin:left;
+  transition:transform .2s ease;
+}
+.card:hover{
+  box-shadow:var(--shadow-hover);
+  border-color:var(--sap-blue-light);
+  transform:translateY(-2px);
+}
+.card:hover::after{transform:scaleX(1)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.card-icon-box{
+  width:38px;height:38px;border-radius:8px;
+  background:var(--sap-blue-pale);display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;
+}
+.badge{
+  font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;
+  background:var(--tag-bg);color:var(--sap-blue);white-space:nowrap;
+}
+.badge.g{background:var(--green-bg);color:var(--green)}
+.badge.o{background:var(--amber-bg);color:var(--amber)}
+.badge.r{background:var(--orange-bg);color:var(--orange)}
+.badge.p{background:var(--purple-bg);color:var(--purple)}
+
+.card-title{font-size:14px;font-weight:700;line-height:1.4;color:var(--text)}
+.card-zh{font-size:12px;color:var(--sap-blue);font-weight:500;margin-top:-4px}
+.card-desc{font-size:12.5px;color:var(--text-muted);line-height:1.55;flex:1}
+
+.card-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:4px;border-top:1px solid var(--border);padding-top:10px;
+}
+.launch-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--sap-blue);color:#fff;
+  padding:6px 13px;border-radius:6px;font-size:12.5px;font-weight:600;
+  text-decoration:none;transition:background var(--transition);
+  pointer-events:none;
+}
+.card:hover .launch-btn{background:var(--sap-blue-dark)}
+.card-region{font-size:11px;color:var(--text-muted)}
+
+/* placeholder */
+.placeholder{
+  background:var(--white);border:2px dashed var(--border);
+  border-radius:var(--radius);padding:20px;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:8px;
+  min-height:160px;cursor:default;
+}
+.placeholder .ph-icon{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--bg);border:1.5px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:#b0b8c8;
+}
+.placeholder strong{font-size:13px;color:var(--text-muted)}
+.placeholder p{font-size:12px;color:#aab4c0;max-width:180px;line-height:1.4}
+
+/* no-result */
+.no-result{
+  grid-column:1/-1;text-align:center;padding:48px 0;color:var(--text-muted);
+}
+.no-result svg{margin-bottom:12px;opacity:.3}
+.no-result p{font-size:15px}
+
+/* hidden */
+.hidden{display:none!important}
+
+/* FOOTER */
+.footer{
+  background:var(--text);color:rgba(255,255,255,.55);
+  text-align:center;padding:18px;font-size:12px;margin-top:32px;
+}
+.footer a{color:var(--sap-blue-light);text-decoration:none}
+
+/* responsive */
+@media(max-width:720px){
+  .header{padding:0 14px}
+  .tab-nav,.subfilter-bar,.main{padding-left:14px;padding-right:14px}
+  .search-wrap{min-width:160px}
+  .stats-row .vdivider:nth-child(n+4){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo-wrap">
+      <svg viewBox="0 0 412.4 204" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sg" x1="206.19" y1="206" x2="206.19" y2="2" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1 0 0 -1 0 206)">
+            <stop offset="0" stop-color="#00B8F1"/><stop offset=".02" stop-color="#01B6F0"/>
+            <stop offset=".31" stop-color="#0D90D9"/><stop offset=".58" stop-color="#1775C8"/>
+            <stop offset=".82" stop-color="#1C65BF"/><stop offset="1" stop-color="#1E5FBB"/>
+          </linearGradient>
+        </defs>
+        <polyline fill="url(#sg)" points="0,204 208.4,204 412.4,0 0,0 0,204"/>
+        <path fill="#fff" d="M244.7,38.4h-40.6v96.5l-35.5-96.6h-35.2l-30.3,80.7C100,98.7,79,91.7,62.4,86.4C51.5,82.9,39.8,77.7,40,72
+          c0.1-4.7,6.2-9,18.4-8.4c8.2,0.4,15.4,1.1,29.7,8l14.1-24.5c-13.1-6.6-31.2-10.9-46-10.9h-0.1c-17.3,0-31.7,5.6-40.6,14.8
+          c-6.2,6.3-9.7,14.8-9.7,23.7C5.5,87.2,10.1,96,19.7,103c8.1,5.9,18.5,9.8,27.6,12.6c11.3,3.5,20.5,6.5,20.4,13
+          c-0.1,2.4-1,4.7-2.7,6.4c-2.8,2.9-7.1,4-13.1,4.1c-11.5,0.2-20-1.6-33.6-9.6L5.8,154.4c14,8,29.9,12.2,46,12.2h2.1
+          c14.2-0.2,25.7-4.3,34.9-11.7c0.5-0.4,1-0.8,1.5-1.3l-4.1,10.9H123l6.2-18.8c7,2.3,14.3,3.5,21.7,3.4c7.2,0,14.3-1.1,21.2-3.2
+          l6,18.6h60.1v-39h13.1c31.7,0,50.5-16.2,50.5-43.2C301.7,52.2,283.5,38.4,244.7,38.4z M150.9,121c-4.4,0-8.8-0.7-13-2.3
+          l12.9-40.6h0.2l12.6,40.7C159.6,120.3,155.2,121,150.9,121z M247.1,97.7h-8.9V64.9h8.9c11.9,0,21.4,4,21.4,16.1
+          C268.5,93.7,259,97.6,247.1,97.7"/>
+      </svg>
+    </div>
+    <div class="hdiv"></div>
+    <span class="header-title">SAP DEMO Portal</span>
+  </div>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <circle cx="7" cy="7" r="5.5" stroke="white" stroke-width="1.6"/>
+      <path d="M11 11L14.5 14.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <input type="text" id="searchInput" placeholder="搜尋 Demo 名稱或標籤…" oninput="onSearch()">
+  </div>
+</header>
+
+<!-- ════ TAB NAV ════ -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="all"     onclick="switchTab('all',this)">全部</button>
+  <button class="tab-btn"        data-tab="sac"     onclick="switchTab('sac',this)">&#127775; SAP Analytics Cloud</button>
+  <button class="tab-btn"        data-tab="bdc"     onclick="switchTab('bdc',this)">&#9889; BDC + Databricks</button>
+  <button class="tab-btn"        data-tab="ai"      onclick="switchTab('ai',this)">&#129302; AI &amp; Joule</button>
+  <button class="tab-btn"        data-tab="demo-env" onclick="switchTab('demo-env',this)">&#127968; Demo 環境</button>
+  <button class="tab-btn"        data-tab="datasphere" onclick="switchTab('datasphere',this)">&#127760; Datasphere</button>
+</nav>
+
+<!-- ════ SAC SUB-FILTER ════ -->
+<div class="subfilter-bar hidden" id="subfilterBar">
+  <span class="chip active" data-sub="all" onclick="switchSub('all',this)">全部 SAC</span>
+  <span class="chip" data-sub="finance"    onclick="switchSub('finance',this)">💰 財務 &amp; 規劃</span>
+  <span class="chip" data-sub="procurement" onclick="switchSub('procurement',this)">🛒 採購 &amp; 供應鏈</span>
+  <span class="chip" data-sub="sales"      onclick="switchSub('sales',this)">📣 銷售 &amp; 業績</span>
+  <span class="chip" data-sub="other"      onclick="switchSub('other',this)">🏢 其他產業</span>
+</div>
+
+<!-- ════ MAIN ════ -->
+<main class="main">
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat"><span class="stat-val" id="visibleCount">45</span><span class="stat-lbl">Demo 資源</span></div>
+    <div class="vdivider"></div>
+    <div class="stat"><span class="stat-val" id="catCount">6</span><span class="stat-lbl">類別</span></div>
+    <div class="vdivider"></div>
+    <div class="stat"><span class="stat-val">SAC</span><span class="stat-lbl">財務・採購・銷售</span></div>
+    <div class="vdivider"></div>
+    <div class="stat"><span class="stat-val">BDC</span><span class="stat-lbl">+ Databricks 整合</span></div>
+    <div class="vdivider"></div>
+    <div class="stat"><span class="stat-val">2026</span><span class="stat-lbl">更新 07/2026</span></div>
+  </div>
+
+  <!-- Sections rendered by JS -->
+  <div id="portal"></div>
+
+</main>
+
+<footer class="footer">
+  SAP DEMO Portal &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Built on <a href="https://ekx.cloud.sap" target="_blank">EKX DeepAgent</a>
+</footer>
+
+<script>
+/* ════════════════════════════════
+   DEMO DATA
+   ════════════════════════════════ */
+const DEMOS = [
+  // ── SAC Finance ──
+  {id:1, title:"Financial Planning & Consolidation",zh:"財務規劃與合併",desc:"財務規劃、預算編制與合併報表 Digital Boardroom（Dark Mode）",url:"https://demo-custom.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#;view_id=digital-boardroom-view;presentationId=165E5AE7DD018EE45A0D696F2124E2F0;topicId=27CBCB5CFBA06AB1E204E72CFB4F7CF8;storyId=465E5AE7DD019977FB42D19DC6D8C067;pageId=f4e50908-5802-4c8a-a109-1dcff93a7a5f",cat:"sac",sub:"finance",icon:"💰",badge:"FPC",badgeCls:"",region:"jp10",tags:["Finance","FPC","Planning","Consolidation"]},
+  {id:2, title:"Financial Planning (Light Mode)",zh:"財務規劃（Light）",desc:"財務規劃分析 Digital Boardroom — 亮色版本，適合展示場合",url:"https://demo-custom.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#;view_id=digital-boardroom-view;presentationId=82EE0AE4E9F861F6B3D883341CB7C62E;topicId=175DC15C9D3F6AB1E200E72CFB4F7CF8;storyId=4B2DCAE4D086CED49BDECBE09B207AA6;pageId=1ef88b84-f138-4b91-9b91-f39f62747bd9",cat:"sac",sub:"finance",icon:"📈",badge:"FPC",badgeCls:"",region:"jp10",tags:["Finance","FPC","Planning","Boardroom"]},
+  {id:3, title:"Business Resilience Index (BRI)",zh:"商業韌性指標",desc:"財務與永續韌性整合分析，含 ESG 指標與投資組合分析",url:"https://sap-business.eu10.sapanalytics.cloud/sap/fpa/ui/tenants/5f0d/app.html#/story&/s/D43A510500312A1C34FAC28EA29967BB/?view_id=story&mode=view",cat:"sac",sub:"finance",icon:"🌿",badge:"ESG",badgeCls:"g",region:"eu10",tags:["Finance","ESG","Sustainability","BRI"]},
+  {id:4, title:"BRI 永續展示（SAP NOW）",zh:"BRI 永續報告",desc:"Business Resilience Index 簡報模式 — SAP NOW 版本永續報告展示",url:"https://sap-business.eu10.sapanalytics.cloud/sap/fpa/ui/tenants/5f0d/app.html#/story&/s/D43A510500312A1C34FAC28EA29967BB/?mode=present&view_id=story",cat:"sac",sub:"finance",icon:"♻️",badge:"SAP NOW",badgeCls:"g",region:"eu10",tags:["Finance","ESG","SAP NOW","Sustainability"]},
+
+  // ── SAC Procurement ──
+  {id:5, title:"Supply Chain Management (SCM)",zh:"供應鏈管理",desc:"採購、庫存與供應鏈管理整合分析 Story",url:"https://demo-standard.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#/story&/s/6A0ACB079DFB76D4D5CA9C188DEB9544/?resourceType=STORY&mode=view",cat:"sac",sub:"procurement",icon:"🔗",badge:"SCM",badgeCls:"",region:"jp10",tags:["SCM","Procurement","Supply Chain","Inventory"]},
+  {id:6, title:"Supply Chain Intelligence",zh:"供應鏈智慧",desc:"供應鏈智慧分析 Digital Boardroom — 訂單履行、交期與庫存洞察",url:"https://demo-standard.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#/digitalboardroom&/db/F043AF5A2D5D5C28E10000000AC2605D/CD44AF5A2D5D5C28E10000000AC2605D/074FA5B68CCD1B7467175B71328E789AE02E249A7127C1DF793861B60DB52B25/a456a77a-4e1e-460a-9ca2-52cbcce14f96////?mode=view&view_id=digital-boardroom-view",cat:"sac",sub:"procurement",icon:"🚚",badge:"Supply Chain",badgeCls:"",region:"jp10",tags:["SCM","Supply Chain","Intelligence","Boardroom"]},
+  {id:7, title:"訂單與 BOM 分析",zh:"訂單BOM",desc:"訂單追蹤、物料清單 (BOM) 分析 Digital Boardroom — 製造業場景",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/digitalboardroom&/db/BF87281E714C950EE41CB84726196D4/857F0E503CE27A201800FE0042A3C638/B1206A81E7114B77C2E9BC2DB13BC340/05bc5fc2-7128-48df-9a7b-62b16b7b641c//dashboard//?resourceType=PRESENTATION_V2&mode=view",cat:"sac",sub:"procurement",icon:"📦",badge:"BOM",badgeCls:"o",region:"cn40",tags:["BOM","Order","Manufacturing","Procurement"]},
+  {id:8, title:"工程行業分析平台",zh:"工程採購分析",desc:"工程製造產業採購、生產進度與品質分析 Digital Boardroom",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/digitalboardroom&/db/60426AFA558D8C29D5B836ACB0E2811D/B0084D5F4AB1C982E200BF3C1B6E69B5/6CC9A2FD44FDAE9F6A00AECD4F97F16F/7a9d5fb7-8441-4e26-8ea6-562b11e781c5//dashboard//?mode=view&resourceType=PRESENTATION_V2",cat:"sac",sub:"procurement",icon:"🏭",badge:"Engineering",badgeCls:"o",region:"cn40",tags:["Engineering","Manufacturing","Procurement","Industrial"]},
+
+  // ── SAC Sales ──
+  {id:9,  title:"零售銷售分析（Retail）",zh:"零售銷售",desc:"零售業銷售績效、客戶行為與門市表現 Digital Boardroom",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/digitalboardroom&/s/F7B10582A6D28A41E89A0F4D41FF0EF7/?mode=embed&/db/F7B10582A6D28A41E89A0F4D41FF0EF7/6FF620B054DAA1DA1700FE00A4CA4583/9C88FD82A6D2578CCD712E687E176A3F/7c2c70f6-819d-4466-b865-a7fc4404eaca////?mode=view",cat:"sac",sub:"sales",icon:"🛍️",badge:"Retail",badgeCls:"o",region:"cn40",tags:["Retail","Sales","Customer","Revenue"]},
+  {id:10, title:"SAC 台灣 Presales Demo",zh:"台灣銷售Demo",desc:"台灣預銷售 SAC 主要展示環境 — Digital Boardroom 總入口",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/digitalboardroom",cat:"sac",sub:"sales",icon:"🇹🇼",badge:"TW Presales",badgeCls:"",region:"cn40",tags:["Sales","Taiwan","Presales","Boardroom"]},
+  {id:11, title:"SAC — Altek 案例",zh:"Altek銷售",desc:"Altek 應用案例 — 銷售分析 Story 展示",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/story&/s/1088F681C3744EEEDB668C40845D7ADC/?mode=view",cat:"sac",sub:"sales",icon:"📡",badge:"Case Study",badgeCls:"p",region:"jp10",tags:["Sales","Altek","Case Study","Electronics"]},
+  {id:12, title:"Life Sciences — 銷售分析",zh:"生科銷售",desc:"醫療生命科學產業銷售、市場分析 Digital Boardroom",url:"https://demo-standard.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#/digitalboardroom&/db/7FCD805A7E951543E10000000A6C99A2/F6CF805A7E951543E10000000A6C99A2/57036E275D43055AE10000000A6C996A/c5c079f8-b4c7-465c-abbb-2bfe259cab9a/4ACE805A7E951543E10000000A6C99A2//false/?view_id=digital-boardroom-view&mode=view",cat:"sac",sub:"sales",icon:"💊",badge:"Life Sciences",badgeCls:"g",region:"jp10",tags:["Life Sciences","Healthcare","Sales","Pharma"]},
+  {id:13, title:"碳管理暨 ESG 分析",zh:"碳管理ESG",desc:"永續發展、碳排放管理與 ESG 績效分析展示",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/digitalboardroom&/db/F7B10582A6D28A41E89A0F4D41FF0EF7/6FF620B054DAA1DA1700FE00A4CA4583/9C88FD82A6D2578CCD712E687E176A3F/7c2c70f6-819d-4466-b865-a7fc4404eaca////?mode=view",cat:"sac",sub:"sales",icon:"🌍",badge:"ESG",badgeCls:"g",region:"cn40",tags:["ESG","Carbon","Sustainability","Reporting"]},
+
+  // ── SAC Other ──
+  {id:14, title:"人力資源規劃分析",zh:"HR分析",desc:"人力規劃、薪酬預算、組織人員分析 Story",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/app.html#/story&/s/1FC3B0459A3E75532B6593BA9FF0580/?resourceType=STORY&mode=view",cat:"sac",sub:"other",icon:"👥",badge:"HR",badgeCls:"p",region:"cn40",tags:["HR","People Analytics","Planning","Workforce"]},
+  {id:15, title:"SuccessFactors HR Demo",zh:"SF人才管理",desc:"SAP SuccessFactors 人才管理、招募與績效分析",url:"https://demo-presalesgc.cn40.analytics.sapcloud.cn/sap/fpa/ui/tenants/f14f1/app.html#/story&/s/C2982E8522057098DB8D8F8B26C21394/?view_id=story&mode=view",cat:"sac",sub:"other",icon:"🎓",badge:"SuccessFactors",badgeCls:"p",region:"cn40",tags:["HR","SuccessFactors","Talent","Recruitment"]},
+  {id:16, title:"SAC — OUCC 客戶環境",zh:"OUCC",desc:"OUCC 客戶專屬 SAP Analytics Cloud 環境",url:"https://oucc.jp10.hcs.cloud.sap/sap/fpa/ui/app.html#;view_id=home",cat:"sac",sub:"other",icon:"🏢",badge:"Customer",badgeCls:"",region:"jp10",tags:["Customer","OUCC","Live"]},
+  {id:17, title:"SAC — AUO 友達光電",zh:"AUO分析",desc:"AUO 友達光電 SAP Analytics Cloud 環境",url:"https://auo.jp10.hcs.cloud.sap/sap/fpa/ui/app.html#/home",cat:"sac",sub:"other",icon:"🖥️",badge:"AUO",badgeCls:"",region:"jp10",tags:["Customer","AUO","Display","Manufacturing"]},
+  {id:18, title:"SAC — Yageo 國巨",zh:"Yageo分析",desc:"Yageo 國巨 SAP Analytics Cloud 環境",url:"https://yageo-1.jp10.hcs.cloud.sap/sap/fpa/ui/app.html#/home",cat:"sac",sub:"other",icon:"⚡",badge:"Yageo",badgeCls:"",region:"jp10",tags:["Customer","Yageo","Electronics"]},
+
+  // ── BDC + Databricks ──
+  {id:19, title:"BDC System Landscape",zh:"BDC系統架構",desc:"SAP Business Data Cloud 系統架構總覽 — 資料來源連線管理",url:"https://trial-bdc-core.eu10.hcs.cloud.sap/bdc-ui/index.html#/bdc_systemLandscape",cat:"bdc",sub:"bdc-core",icon:"🗺️",badge:"BDC Core",badgeCls:"",region:"eu10",tags:["BDC","Architecture","Integration","S4HANA"]},
+  {id:20, title:"Databricks Workspace",zh:"Databricks工作區",desc:"Databricks Lakehouse 工作區 — 資料工程、ML Pipeline、Delta Lake",url:"https://dbc-879ab089-f9dc.cloud.databricks.com/?autoLogin=true&o=2434683670143059",cat:"bdc",sub:"databricks",icon:"🔥",badge:"Databricks",badgeCls:"o",region:"cloud",tags:["Databricks","Lakehouse","ML","Delta","Spark"]},
+  {id:21, title:"SAP Datasphere (BDC Trial)",zh:"BDC Datasphere",desc:"BDC 場域中的 SAP Datasphere — 資料空間、資料產品管理",url:"https://trial-bdc-datasphere.eu10.hcs.cloud.sap/dwaas-core/index.html#/home",cat:"bdc",sub:"bdc-core",icon:"🌐",badge:"Datasphere",badgeCls:"",region:"eu10",tags:["BDC","Datasphere","Data Products","Spaces"]},
+  {id:22, title:"BDC — S/4HANA 整合展示",zh:"BDC+S4整合",desc:"S/4HANA 與 BDC 整合場域完整展示 Demo",url:"https://demo-b-sb01-s4p-eu.eu10.hcs.cloud.sap/bdc-ui/index.html#/bdc_home",cat:"bdc",sub:"bdc-core",icon:"🔄",badge:"S4+BDC",badgeCls:"g",region:"eu10",tags:["BDC","S4HANA","Integration","Demo"]},
+  {id:23, title:"SAP BDC — APAC Cockpit",zh:"BDC APAC",desc:"亞太區 SAP Business Data Cloud Cockpit Demo 環境",url:"https://apac-bdc-cockpit-1.eu10.hcs.cloud.sap/bdc-ui/index.html#/bdc_home",cat:"bdc",sub:"bdc-core",icon:"🌏",badge:"APAC",badgeCls:"",region:"eu10",tags:["BDC","APAC","Demo","Cockpit"]},
+  {id:24, title:"S/4HANA → Databricks 整合技術",zh:"S4+Databricks技術",desc:"技術文章：透過 BDC Connect 與 Delta Sharing 整合 S/4HANA 至 Databricks",url:"https://community.sap.com/t5/technology-blog-posts-by-members/sharing-sap-s-4hana-data-with-databricks-using-bdc-connect-and-delta/ba-p/14365578",cat:"bdc",sub:"reference",icon:"📚",badge:"Blog",badgeCls:"p",region:"SAP Community",tags:["BDC","Databricks","Delta","Blog","Technical"]},
+  {id:25, title:"端到端資料產品實作 (BDC)",zh:"BDC端對端",desc:"從原始資料到資料產品：SAP Business Data Cloud 端到端技術實作",url:"https://community.sap.com/t5/technology-blog-posts-by-sap/from-raw-data-to-data-products-end-to-end-implementation-using-sap-business/ba-p/14374364",cat:"bdc",sub:"reference",icon:"📖",badge:"Blog",badgeCls:"p",region:"SAP Community",tags:["BDC","Data Products","End-to-End","Blog"]},
+  {id:26, title:"ERP Data Builder (DEMO Space)",zh:"ERP資料建構",desc:"BDC 場域 ERP Demo 資料建構空間 — 資料模型設計",url:"https://demo-d-sandbox.eu10.hcs.cloud.sap/dwaas-ui/index.html#/databuilder&/db/DEMO_16991",cat:"bdc",sub:"bdc-core",icon:"🔧",badge:"Data Builder",badgeCls:"",region:"eu10",tags:["BDC","Datasphere","Data Builder","ERP","Modeling"]},
+
+  // ── AI & Joule ──
+  {id:27, title:"Joule 4C",zh:"Joule AI助理",desc:"SAP Joule AI 商業助理 Demo — 企業流程智能化、自然語言互動",url:"https://scc-internal-users.eu12.sapdas-staging.cloud.sap/joule",cat:"ai",sub:"joule",icon:"✨",badge:"Joule",badgeCls:"p",region:"eu12",tags:["Joule","AI","GenAI","NLP","Assistant"]},
+  {id:28, title:"Joule — SAP NOW Build",zh:"Joule Build Demo",desc:"Joule AI 解決方案建構與 Agent 設計展示（SAP NOW 版本）",url:"https://joulevalidation.eu12.sapdas-staging.cloud.sap/new/build/solutions/9c60dea1-a206-4462-886b-3861ef33b056",cat:"ai",sub:"joule",icon:"🧠",badge:"SAP NOW",badgeCls:"p",region:"eu12",tags:["Joule","AI","SAP NOW","Build","Agent"]},
+  {id:29, title:"Joule 2.0 — SAP NOW",zh:"Joule 2.0",desc:"下一代 Joule 2.0 AI 助理 Demo — 進階流程自動化",url:"https://joulevalidation.eu12.sapdas-staging.cloud.sap/new/build/solutions/2e97fb05-6045-4e38-961c-6513b6b96ca2",cat:"ai",sub:"joule",icon:"🚀",badge:"Joule 2.0",badgeCls:"p",region:"eu12",tags:["Joule","AI","GenAI","2.0","Advanced"]},
+  {id:30, title:"SAP Document AI (TW)",zh:"文件AI工作區",desc:"台灣區 Document AI 工作區 — 智慧文件擷取、分類與處理",url:"https://saptw-ai.eu10.doc.cloud.sap/workspace#/landingPage",cat:"ai",sub:"doc-ai",icon:"📄",badge:"Doc AI",badgeCls:"",region:"eu10",tags:["Document AI","AI","OCR","Taiwan","Extraction"]},
+  {id:31, title:"Document AI — Invoice Viewer",zh:"發票AI擷取",desc:"發票智慧擷取與識別展示（Invoice Extraction Demo）",url:"https://ai-exercise-qvxpckjd.us10.doc.cloud.sap/ui/index.html?clientId=default#/invoiceviewer",cat:"ai",sub:"doc-ai",icon:"🧾",badge:"Invoice AI",badgeCls:"",region:"us10",tags:["Document AI","Invoice","OCR","Extraction","AP"]},
+  {id:32, title:"SAP AI Launchpad — Playground",zh:"AI模型Hub",desc:"SAP AI Launchpad — Generative AI Hub，模型探索與 Prompt Engineering",url:"https://sapit-core-playground-vole.ai-launchpad.prod.eu-central-1.aws.apps.ml.hana.ondemand.com/aic/index.html#/generativeaihub?workspace=sap-genai-xl&resourceGroup=default&/g/promptchat",cat:"ai",sub:"ai-platform",icon:"🔬",badge:"AI Hub",badgeCls:"o",region:"AWS",tags:["AI","GenAI","LLM","Playground","Prompt"]},
+  {id:33, title:"SAP AI Launchpad (TW)",zh:"AI Launchpad台灣",desc:"台灣區 SAP AI Launchpad — AI 場景管理、模型部署",url:"https://saptw-ai.ai-launchpad.prod.eu-central-1.aws.apps.ml.hana.ondemand.com/aic/index.html#/generativeaihub",cat:"ai",sub:"ai-platform",icon:"🌐",badge:"AI TW",badgeCls:"o",region:"AWS",tags:["AI","Taiwan","LLM","Launchpad","Models"]},
+
+  // ── Demo Environments ──
+  {id:34, title:"SAP Demo Cloud Self-Service",zh:"Demo Cloud入口",desc:"SAP Demo Cloud 自助服務入口 — 存取各類標準 Demo 系統",url:"https://www.sapdemocloud.com/cloudportal/index.html",cat:"demo-env",sub:"portal",icon:"☁️",badge:"Demo Cloud",badgeCls:"",region:"cloud",tags:["Demo","Self-Service","Portal","SAP"]},
+  {id:35, title:"Demo & Education Cloud",zh:"教育Demo環境",desc:"SAP Demo 與教育雲端環境主入口（Launchpad）",url:"https://portal.demo-education.cloud.sap/sites#Shell-home",cat:"demo-env",sub:"portal",icon:"🏫",badge:"Education",badgeCls:"",region:"cloud",tags:["Demo","Education","Learning","Portal"]},
+  {id:36, title:"S/4HANA Cloud Demo",zh:"S4 Fiori Demo",desc:"S/4HANA Cloud 安全 Demo 環境 — Fiori Launchpad 標準流程展示",url:"https://c00000000004-l000372-44302.da-euw4.demo-education.cloud.sap//sap/bc/ui2/flp?sap-language=EN#Shell-home",cat:"demo-env",sub:"s4",icon:"🏭",badge:"S/4HANA",badgeCls:"g",region:"euw4",tags:["S4HANA","Cloud","Demo","Fiori","ERP"]},
+  {id:37, title:"SAP Content Discovery",zh:"內容探索",desc:"探索 SAP Demo 資產、解決方案展示與產業情境，按需篩選",url:"https://content-discovery.int.sap/explore?contentCategoryIds=DEMO",cat:"demo-env",sub:"portal",icon:"🔍",badge:"Discovery",badgeCls:"",region:"cloud",tags:["Demo","Discovery","Content","Assets"]},
+  {id:38, title:"SAP Unified Demo Store",zh:"統一Demo商店",desc:"SAP 統一 Demo 商店 — 標準化 Demo 腳本與資產一站取用",url:"https://sapdemostore.com/sap/bc/ui5_ui5/sap/yunifiedstore/index.html",cat:"demo-env",sub:"portal",icon:"🏪",badge:"Demo Store",badgeCls:"",region:"cloud",tags:["Demo","Store","Unified","Scripts"]},
+  {id:39, title:"SAP Experience Agent",zh:"體驗智能助理",desc:"SAP Experience Agent 下一代互動式 Demo 體驗平台",url:"https://www.experience-agent.cloud.sap/",cat:"demo-env",sub:"portal",icon:"🤖",badge:"New",badgeCls:"g",region:"cloud",tags:["Experience","Agent","AI","Interactive","Demo"]},
+  {id:40, title:"Customer Strategy Explorer",zh:"客戶策略探索",desc:"客戶策略、行業洞察與解決方案探索導引工具",url:"https://cse.cfapps.us10.hana.ondemand.com/#",cat:"demo-env",sub:"portal",icon:"🧭",badge:"Strategy",badgeCls:"p",region:"us10",tags:["Customer","Strategy","Explorer","Industry"]},
+
+  // ── Datasphere ──
+  {id:41, title:"SAP Datasphere — TW Presales",zh:"Datasphere台灣",desc:"台灣預銷售 SAP Datasphere 標準展示環境",url:"https://demo-d-standard.jp10.hcs.cloud.sap/dwaas-ui/index.html#/home",cat:"datasphere",sub:"demo",icon:"🌟",badge:"TW Standard",badgeCls:"",region:"jp10",tags:["Datasphere","DWC","Taiwan","Presales","Demo"]},
+  {id:42, title:"SAP Datasphere — Sandbox",zh:"Datasphere沙盒",desc:"SAP Datasphere 沙盒環境 — 開發、測試與模型建構",url:"https://demo-d-sandbox.eu10.hcs.cloud.sap/dwaas-ui/index.html#/home",cat:"datasphere",sub:"sandbox",icon:"🧪",badge:"Sandbox",badgeCls:"",region:"eu10",tags:["Datasphere","Sandbox","Development","Testing"]},
+  {id:43, title:"SAP Analytics Cloud (DWC/DSP)",zh:"SAC+Datasphere",desc:"SAP Analytics Cloud 連接 Datasphere 整合展示 — 資料視覺化",url:"https://demo-standard.jp10.sapanalytics.cloud/sap/fpa/ui/app.html#/home",cat:"datasphere",sub:"demo",icon:"📊",badge:"SAC+DSP",badgeCls:"",region:"jp10",tags:["SAC","Datasphere","Integration","Visualization"]},
+  {id:44, title:"SAP Datasphere — MOXA",zh:"Datasphere MOXA",desc:"MOXA 客戶 SAP Datasphere 開發環境",url:"https://dsp-moxa-dev.jp10.hcs.cloud.sap/dwaas-core/index.html#/home",cat:"datasphere",sub:"customer",icon:"📡",badge:"MOXA",badgeCls:"o",region:"jp10",tags:["Datasphere","MOXA","Customer","IoT","Industrial"]},
+  {id:45, title:"SAP Datasphere — Wistron 緯創",zh:"Datasphere緯創",desc:"緯創資通 Wistron SAP Datasphere DP Agent 設定與資料整合",url:"https://wistron-dwc.jp10.hcs.cloud.sap/dwaas-ui/index.html#/configuration&/cfg/dpagent",cat:"datasphere",sub:"customer",icon:"🔩",badge:"Wistron",badgeCls:"o",region:"jp10",tags:["Datasphere","Wistron","Customer","DP Agent","Configuration"]},
+];
+
+/* Placeholder items (not in search/filter count, rendered separately) */
+const PLACEHOLDERS = {
+  "sac-finance":     {title:"自訂財務報表",     hint:"在此新增您的 SAC 財務分析 / FP&A 報表連結"},
+  "sac-procurement": {title:"自訂採購報表",     hint:"在此新增您的 SAC 採購 / 供應鏈分析報表"},
+  "sac-sales":       {title:"自訂銷售報表",     hint:"在此新增您的 SAC 銷售 / Revenue 分析報表"},
+  "bdc-databricks":  {title:"自訂 BDC Demo",   hint:"在此新增您的 BDC + Databricks 場域展示連結"},
+};
+
+/* ── State ── */
+let activeTab = "all";
+let activeSub = "all";
+let searchQ   = "";
+
+/* ── Section definitions ── */
+const SECTIONS = [
+  {key:"sac-finance",      cat:"sac", sub:"finance",     icon:"💰", title:"財務 & 規劃分析",        eng:"Financial Planning & Consolidation"},
+  {key:"sac-procurement",  cat:"sac", sub:"procurement",  icon:"🛒", title:"採購 & 供應鏈",          eng:"Procurement & Supply Chain Analytics"},
+  {key:"sac-sales",        cat:"sac", sub:"sales",        icon:"📣", title:"銷售 & 業績分析",        eng:"Sales Performance & Revenue Analytics"},
+  {key:"sac-other",        cat:"sac", sub:"other",        icon:"🏢", title:"其他產業 Demo",          eng:"Cross-Industry SAC Demonstrations"},
+  {key:"bdc",              cat:"bdc", sub:null,            icon:"⚡", title:"BDC + Databricks",     eng:"SAP Business Data Cloud & Lakehouse Integration"},
+  {key:"ai",               cat:"ai",  sub:null,            icon:"🤖", title:"AI & Joule",            eng:"Generative AI, Document AI & Joule Assistant"},
+  {key:"demo-env",         cat:"demo-env", sub:null,       icon:"☁️", title:"Demo 環境",             eng:"SAP Demo Portals & Standard Environments"},
+  {key:"datasphere",       cat:"datasphere", sub:null,     icon:"🌐", title:"SAP Datasphere",        eng:"Data Warehouse Cloud / Datasphere Demos"},
+];
+
+/* ════ RENDER ════ */
+function render() {
+  const portal = document.getElementById("portal");
+  portal.innerHTML = "";
+  let totalVisible = 0;
+
+  SECTIONS.forEach(sec => {
+    // Tab filter
+    if (activeTab !== "all") {
+      if (activeTab === "sac" && sec.cat !== "sac") return;
+      if (activeTab !== "sac" && sec.cat !== activeTab) return;
+    }
+    // SAC sub filter
+    if (activeTab === "sac" && activeSub !== "all" && sec.sub !== activeSub) return;
+
+    // Filter demos for this section
+    const demos = DEMOS.filter(d => {
+      const matchCat = d.cat === sec.cat && (sec.sub === null || d.sub === sec.sub);
+      if (!matchCat) return false;
+      if (!searchQ) return true;
+      const q = searchQ.toLowerCase();
+      return d.title.toLowerCase().includes(q) ||
+             d.zh.toLowerCase().includes(q) ||
+             d.desc.toLowerCase().includes(q) ||
+             d.tags.some(t => t.toLowerCase().includes(q));
+    });
+
+    const hasPH = PLACEHOLDERS[sec.key] && activeTab !== "all" && !searchQ;
+    if (demos.length === 0 && !hasPH) return;
+
+    totalVisible += demos.length;
+    portal.appendChild(buildSection(sec, demos, hasPH));
+  });
+
+  document.getElementById("visibleCount").textContent = totalVisible;
+
+  // "No results" message
+  if (portal.innerHTML === "" || (portal.querySelectorAll(".card").length === 0 && !portal.querySelector(".placeholder"))) {
+    portal.innerHTML = `
+      <div class="no-result">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.4">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <p>找不到符合「${searchQ}」的 Demo 資源</p>
+      </div>`;
+    document.getElementById("visibleCount").textContent = "0";
+  }
+}
+
+function buildSection(sec, demos, showPlaceholder) {
+  const wrap = document.createElement("section");
+  wrap.className = "section";
+  wrap.innerHTML = `
+    <div class="section-head">
+      <div class="sec-icon">${sec.icon}</div>
+      <div class="sec-titles">
+        <div class="sec-title">${sec.title}</div>
+        <div class="sec-sub">${sec.eng}</div>
+      </div>
+      <div class="sec-line"></div>
+      <div class="sec-count">${demos.length} 個 Demo</div>
+    </div>
+    <div class="card-grid" id="grid-${sec.key}"></div>`;
+
+  const grid = wrap.querySelector(".card-grid");
+  demos.forEach(d => grid.appendChild(buildCard(d)));
+  if (showPlaceholder && PLACEHOLDERS[sec.key]) {
+    grid.appendChild(buildPlaceholder(PLACEHOLDERS[sec.key]));
+  }
+  return wrap;
+}
+
+function buildCard(d) {
+  const a = document.createElement("a");
+  a.className = "card";
+  a.href = d.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.title = d.title;
+  a.innerHTML = `
+    <div class="card-top">
+      <div class="card-icon-box">${d.icon}</div>
+      <span class="badge ${d.badgeCls}">${d.badge}</span>
+    </div>
+    <div class="card-title">${d.title}</div>
+    <div class="card-zh">${d.zh}</div>
+    <div class="card-desc">${d.desc}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:2px">
+      ${d.tags.slice(0,4).map(t=>`<span style="font-size:11px;background:#F0F4F8;color:#556B82;padding:2px 7px;border-radius:10px">${t}</span>`).join("")}
+    </div>
+    <div class="card-footer">
+      <span class="launch-btn">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+          <path d="M3 13L13 3M13 3H7M13 3V9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        開啟 Demo
+      </span>
+      <span class="card-region">${d.region}</span>
+    </div>`;
+  return a;
+}
+
+function buildPlaceholder(ph) {
+  const div = document.createElement("div");
+  div.className = "placeholder";
+  div.innerHTML = `
+    <div class="ph-icon">＋</div>
+    <strong>${ph.title}</strong>
+    <p>${ph.hint}</p>`;
+  return div;
+}
+
+/* ── Tab / Sub Switch ── */
+function switchTab(tab, el) {
+  activeTab = tab;
+  activeSub = "all";
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  // Show/hide sub filter
+  const bar = document.getElementById("subfilterBar");
+  if (tab === "sac") { bar.classList.remove("hidden"); }
+  else               { bar.classList.add("hidden"); }
+  // Reset sub chips
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  document.querySelector(".chip[data-sub='all']").classList.add("active");
+  render();
+}
+
+function switchSub(sub, el) {
+  activeSub = sub;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+  render();
+}
+
+/* ── Search ── */
+function onSearch() {
+  searchQ = document.getElementById("searchInput").value.trim();
+  render();
+}
+
+/* ── Keyboard shortcut ── */
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+    e.preventDefault();
+    document.getElementById("searchInput").focus();
+  }
+});
+
+/* ── Initial render ── */
+render();
+</script>
+</body>
+</html>
